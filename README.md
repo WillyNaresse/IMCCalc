@@ -1,12 +1,12 @@
 # VitalMetrics — Monitor Avançado de Saúde & Metabolismo
 
-VitalMetrics é um aplicativo Android moderno e orientado à privacidade, criado para auxiliar usuários no acompanhamento preciso de indicadores essenciais de saúde. Desenvolvido integralmente em **Kotlin** com **Jetpack Compose**, o aplicativo vai além do cálculo tradicional de IMC, oferecendo análises metabólicas avançadas como **TMB**, **gasto calórico diário (TDEE)**, **peso ideal** e **histórico evolutivo**.
+VitalMetrics é um aplicativo Android moderno e orientado à privacidade, criado para auxiliar usuários no acompanhamento preciso de indicadores essenciais de saúde. Desenvolvido integralmente em **Kotlin** com **Jetpack Compose**, o aplicativo vai além do cálculo tradicional de IMC, oferecendo análises metabólicas avançadas como **TMB**, **gasto calórico diário (TDEE)** e **histórico evolutivo**.
 
 O foco do VitalMetrics é entregar uma experiência limpa e intuitiva baseada no **Material Design 3**, garantindo que todos os dados do usuário sejam armazenados exclusivamente no dispositivo, sem qualquer dependência de serviços externos.
 
 ---
 
-## ✨ Funcionalidades Principais
+##  Funcionalidades Principais
 
 ### ⚡ Análises de Saúde em Tempo Real
 - **IMC Instantâneo:** Cálculo automático com classificação baseada nos padrões da Organização Mundial da Saúde (OMS).
@@ -15,13 +15,9 @@ O foco do VitalMetrics é entregar uma experiência limpa e intuitiva baseada no
   - Gasto Energético Diário Total (TDEE)
   - Peso Ideal pela fórmula de Devine
 
-### 📅 Histórico Evolutivo
+###  Histórico Evolutivo
 - **Armazenamento Local:** Todos os registros são salvos de forma segura em um banco de dados Room local.
 - **Exploração Detalhada:** Visualização cronológica dos dados com acesso individual a registros anteriores para análise aprofundada.
-
-### 🔔 Lembretes Automatizados
-- **Notificações Semanais:** Agendamento confiável de lembretes para registro de peso utilizando WorkManager.
-- **Compatibilidade Moderna:** Totalmente alinhado às políticas de notificação do Android 13 ou superior.
 
 ---
 
@@ -40,9 +36,6 @@ O VitalMetrics segue práticas modernas de desenvolvimento Android, priorizando 
 ### 3. Persistência Reativa com Room
 - **Modelagem Rica:** Os registros armazenam tanto os dados de entrada quanto os valores calculados, permitindo análises futuras ou recálculos.
 - **Atualização Automática da UI:** Uso de `Flow` garante que qualquer alteração no banco reflita instantaneamente na interface.
-
-### 4. Precisão Numérica
-- **Comparações Seguras:** Uso de comparações encadeadas em vez de intervalos fechados para evitar inconsistências causadas por ponto flutuante.
 
 ---
 
@@ -67,5 +60,4 @@ O desenvolvimento do VitalMetrics consolidou conceitos avançados, como:
 ## ▶️ Como Executar
 1. Clone o repositório do projeto.
 2. Abra no Android Studio.
-3. Sincronize o Gradle.
-4. Execute em um emulador ou dispositivo físico.
+3. Execute em um emulador ou dispositivo físico.
