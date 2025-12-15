@@ -1,68 +1,52 @@
 package com.willy.imccalc.ui.features.home
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.willy.imccalc.data.Calculations
+import com.willy.imccalc.data.IMCCalcEntity
 import com.willy.imccalc.data.IMCCalcRepository
-import com.willy.imccalc.navigation.HistoryRoute
-import com.willy.imccalc.ui.UiEvent
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class HomeViewModel(
-    private val id: Long? = null,
-    private val repository: IMCCalcRepository,
+    private val repository: IMCCalcRepository
 ) : ViewModel() {
-    var height by mutableStateOf("")
-        private set
 
-    var weight by mutableStateOf("")
-        private set
+    private val _state = MutableStateFlow(HomeUiState())
+    val state = _state.asStateFlow()
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    fun calculate(
+        height: Long,
+        weight: Double,
+        age: Int,
+        sex: String,
+        activityFactor: Double
+    ) {
+        val imc = Calculations.calculateIMC(height, weight)
+        val classification = Calculations.imcClassification(imc)
+        val tmb = Calculations.calculateTMB(weight, height, age, sex)
+        val idealWeight = Calculations.calculateIdealWeight(height, sex)
+        val calories = Calculations.calculateDailyCalories(tmb, activityFactor)
 
-    fun onEvent(event: HomeEvent) {
-        when (event) {
-            is HomeEvent.HeightChanged -> {
-                height = event.height
-            }
+        val entity = IMCCalcEntity(
+            dateTime = LocalDateTime.now(),
+            height = height,
+            weight = weight,
+            age = age,
+            sex = sex,
+            imc = imc,
+            imcClassification = classification,
+            tmb = tmb,
+            idealWeight = idealWeight,
+            dailyCalories = calories
+        )
 
-            is HomeEvent.WeightChanged -> {
-                weight = event.weight
-            }
-
-            is HomeEvent.goToHistory -> {
-                viewModelScope.launch {
-                    _uiEvent.send(UiEvent.Navigate(HistoryRoute(null)))
-                }
-            }
-
-            HomeEvent.Save -> {
-                saveIMCCalc()
-            }
-            else -> {}
-        }
-    }
-
-    private fun saveIMCCalc() {
         viewModelScope.launch {
-            if (height.isBlank() || weight.isBlank()) {
-                _uiEvent.send(UiEvent.ShowSnackbar("Adicione sua altura e peso."))
-                return@launch
-            }
-
-            val result = Calculations.calculateIMC(height, weight)
-            val now = java.time.LocalDate.now()
-
-            val imcLevel = Calculations.showIMCLevel(result)
-            _uiEvent.send(UiEvent.ShowResult(imcLevel))
-
-            repository.insert(height.toLong(), weight.toDouble(), result, now)
+            repository.insert(entity)
         }
+
+        _state.value = HomeUiState(result = entity)
     }
 }

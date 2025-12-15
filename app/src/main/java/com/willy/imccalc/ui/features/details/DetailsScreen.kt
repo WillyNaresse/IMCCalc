@@ -1,29 +1,31 @@
-package com.willy.imccalc.ui.features.history
+package com.willy.imccalc.ui.features.details
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.willy.imccalc.ui.components.IMCCalcItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(
-    viewModel: HistoryViewModel,
-    onItemClick: (Long) -> Unit,
+fun DetailsScreen(
+    viewModel: DetailsViewModel,
+    id: Long,
     onNavigateBack: () -> Unit
 ) {
-    val history by viewModel.history.collectAsState()
+    LaunchedEffect(id) {
+        viewModel.load(id)
+    }
+
+    val item by viewModel.state.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Histórico de medições") },
+                title = { Text("Detalhes da medição") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -35,16 +37,17 @@ fun HistoryScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            items(history) { item ->
-                IMCCalcItem(
-                    entity = item,
-                    onClick = {
-                        onItemClick(item.id)
-                    }
-                )
+        item?.let {
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .padding(16.dp)
+            ) {
+                Text("IMC: ${"%.2f".format(it.imc)}")
+                Text(it.imcClassification)
+                Text("TMB: ${"%.2f".format(it.tmb)}")
+                Text("Peso ideal: ${"%.2f".format(it.idealWeight)}")
+                Text("Calorias diárias: ${"%.2f".format(it.dailyCalories)}")
             }
         }
     }
