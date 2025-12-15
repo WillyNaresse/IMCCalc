@@ -1,21 +1,19 @@
 package com.willy.imccalc.data
 
 import androidx.room.TypeConverter
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 object DateConverter {
 
     @TypeConverter
     @JvmStatic
-    fun fromTimestamp(value: String?): LocalDate? {
-        return value?.let {
-            LocalDate.parse(it)
-        }
+    fun fromString(value: String?): LocalDateTime? {
+        return value?.let { LocalDateTime.parse(it) }
     }
 
     @TypeConverter
     @JvmStatic
-    fun dateToTimestamp(date: LocalDate?): String? {
-        return date?.toString()
+    fun toString(dateTime: LocalDateTime?): String? {
+        return dateTime?.toString()
     }
 }

@@ -8,14 +8,16 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [IMCCalcEntity::class],
-    version = 1,
+    version = 2,
+    exportSchema = false
 )
 @TypeConverters(DateConverter::class)
-abstract class IMCCalcDatabase: RoomDatabase() {
-    abstract val imcCalcDao: IMCCalcDao
+abstract class IMCCalcDatabase : RoomDatabase() {
+    abstract val dao: IMCCalcDao
 }
 
 object IMCCalcDatabaseProvider {
+
     @Volatile
     private var INSTANCE: IMCCalcDatabase? = null
 
@@ -24,8 +26,10 @@ object IMCCalcDatabaseProvider {
             val instance = Room.databaseBuilder(
                 context.applicationContext,
                 IMCCalcDatabase::class.java,
-                "imccalc-app"
-            ).build()
+                "imccalc-db"
+            )
+                .fallbackToDestructiveMigration()
+                .build()
             INSTANCE = instance
             instance
         }
